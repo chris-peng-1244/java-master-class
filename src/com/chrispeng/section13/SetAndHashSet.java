@@ -97,7 +97,7 @@ public class SetAndHashSet
         planets.add(pluto);
 
         for (HeavenlyBody planet: planets) {
-            System.out.println(planet.getName() + ": " + planet.getOrbintalPeriod());
+            System.out.println(planet.getName() + ": " + planet.getOrbitalPeriod());
         }
 
         Object o = new Object();
