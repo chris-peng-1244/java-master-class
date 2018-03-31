@@ -1,31 +1,40 @@
 package com.chrispeng.section13;
 
+import com.sun.xml.internal.ws.wsdl.writer.document.soap.Body;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class HeavenlyBody
 {
-    private final String name;
-    private final String bodyType;
+    private final Key key;
     private final double orbitalPeriod;
-    private final Set<Moon> satellites;
+    private final Set<HeavenlyBody> satellites;
 
-    public HeavenlyBody(String name, double orbitalPeriod, String bodyType)
+    public enum BodyType {
+        START,
+        PLANET,
+        DWARF_PLANET,
+        MOON,
+        COMET,
+        ASTERIOD
+    }
+
+    public HeavenlyBody(String name, double orbitalPeriod, BodyType bodyType)
     {
-        this.name = name;
+        this.key = new Key(name, bodyType);
         this.orbitalPeriod = orbitalPeriod;
-        this.bodyType = bodyType;
         this.satellites = new HashSet<>();
     }
 
-    public String getName()
-    {
-        return name;
+
+    public Key getKey() {
+        return key;
     }
 
-    public String getBodyType()
+    public static Key makeKey(String name, BodyType bodyType)
     {
-        return bodyType;
+        return new Key(name, bodyType);
     }
 
     public double getOrbitalPeriod()
@@ -33,7 +42,7 @@ public class HeavenlyBody
         return orbitalPeriod;
     }
 
-    public boolean addMoon(Moon moon)
+    public boolean addSatellite(HeavenlyBody moon)
     {
         return this.satellites.add(moon);
     }
@@ -44,10 +53,9 @@ public class HeavenlyBody
     }
 
     @Override
-    public int hashCode()
+    public final int hashCode()
     {
-        System.out.println("hashCode called");
-        return this.name.hashCode() + 57 + this.bodyType.hashCode() + 91;
+        return this.key.hashCode();
     }
 
     @Override
@@ -56,18 +64,60 @@ public class HeavenlyBody
         if (this == obj) {
             return true;
         }
-        System.out.println("obj.getClass() is " + obj.getClass());
-        System.out.println("this.getClass() is " + this.getClass());
-        if ((obj == null) || (obj.getClass() != this.getClass())) {
-            return false;
+
+        if (obj instanceof HeavenlyBody) {
+            HeavenlyBody theObject = (HeavenlyBody) obj;
+            return this.key.equals(theObject.getKey());
+        }
+        return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.key + ", " + this.orbitalPeriod;
+    }
+
+    public static final class Key {
+        private String name;
+        private BodyType bodyType;
+
+        private Key(String name, BodyType bodyType)
+        {
+            this.name = name;
+            this.bodyType = bodyType;
         }
 
-        String objName = ((HeavenlyBody) obj).getName();
-        if(!this.name.equals(objName)) {
-            return false;
+        public BodyType getBodyType() {
+            return bodyType;
         }
 
-        String objType = ((HeavenlyBody) obj).getBodyType();
-        return this.getBodyType().equals(objType);
+        @Override
+        public int hashCode() {
+            return this.name.hashCode() + this.bodyType.hashCode() + 57;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof Key)) {
+                return false;
+            }
+            Key key = (Key) obj;
+            return this.name.equals(key.getName())
+                    && this.bodyType.equals(key.getBodyType());
+        }
+
+        @Override
+        public String toString() {
+            return this.name + ": " + this.bodyType;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
     }
 }

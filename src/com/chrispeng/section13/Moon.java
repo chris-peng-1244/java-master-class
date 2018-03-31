@@ -4,6 +4,6 @@ public class Moon extends HeavenlyBody
 {
     public Moon(String name, double orbintalPeriod)
     {
-        super(name, orbintalPeriod, "MOON");
+        super(name, orbintalPeriod, BodyType.MOON);
     }
 }
