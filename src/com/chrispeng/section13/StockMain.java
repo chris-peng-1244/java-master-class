@@ -1,7 +1,5 @@
 package com.chrispeng.section13;
 
-import com.chrispeng.section11.BaseballPlayer;
-
 import java.util.Map;
 
 public class StockMain
@@ -43,45 +41,36 @@ public class StockMain
             System.out.println(s);
         }
 
-        Basket basket = new Basket("Tim");
-        sellItem(basket, "car", 1);
+        Basket basket = new Basket("Chris");
+        addToBasket(basket, "cup", 1);
+        addToBasket(basket, "juice", 100);
+        addToBasket(basket, "cup", 1);
         System.out.println(basket);
 
-        sellItem(basket, "car", 1);
+        removeFromBasket(basket, "car", 1);
+        removeFromBasket(basket, "cup", 1);
+        removeFromBasket(basket, "car", 1);
         System.out.println(basket);
-
-        if (sellItem(basket, "car", 1) != 1) {
-            System.out.println("There are no more cars in stock");
-        }
-//        System.out.println(basket);
-
-        sellItem(basket, "farri", 1);
-        System.out.println(basket);
-
-        sellItem(basket, "chair", 4);
-        sellItem(basket, "cup", 1);
-        sellItem(basket, "towel", 1);
-        System.out.println(basket);
-
-        stockList.Items().get("car").adjustStock(2000);
-        System.out.println(stockList);
-
-        for (Map.Entry<String, Double> price: stockList.PriceList().entrySet()) {
-            System.out.println(price.getKey() + " costs " + price.getValue());
-        }
     }
 
-    public static int sellItem(Basket basket, String item, int quantity)
+    public static int addToBasket(Basket basket, String item, int quantity)
     {
         StockItem stockItem = stockList.get(item);
         if (stockItem == null) {
             System.out.println("Wd don't sell " + item);
             return 0;
         }
-        if (stockList.sellStock(item, quantity) != 0) {
-            basket.addToBasket(stockItem, quantity);
-            return quantity;
+        return basket.addToBasket(stockItem, quantity);
+    }
+
+    public static int removeFromBasket(Basket basket, String item, int quantity)
+    {
+        StockItem stockItem = stockList.get(item);
+        if (stockItem == null) {
+            System.out.println("You don't have " + item + " in your basket");
+            return 0;
         }
-        return 0;
+
+        return basket.removeFromBasket(stockItem, quantity);
     }
 }
